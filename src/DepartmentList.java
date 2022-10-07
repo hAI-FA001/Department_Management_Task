@@ -16,70 +16,79 @@ public class DepartmentList {
     }
 
     public void showAddDeptDialogs(){
-        Department dept;
         Scanner s = new Scanner(System.in);
+        System.out.println("How many dept.s do u want to add?");
+        int deptNo = s.nextInt();
+        for(int k=0; k < deptNo; k++)
         {
-            System.out.println("Enter department name: ");
-            String deptName = getNonNewLine();
-            System.out.println("Enter HOD's info as prompted.");
-            System.out.print("Name: ");
-            String hodName = getNonNewLine();
-            System.out.print("ID: ");
-            String hodID = getNonNewLine();
-            System.out.print("Designation: ");
-            String hodDes = getNonNewLine();
-
-            System.out.println("Enter incharge's info as prompted.");
-            System.out.print("Name: ");
-            String inName = getNonNewLine();
-            System.out.print("ID: ");
-            String inID = getNonNewLine();
-            System.out.print("Designation: ");
-            String inDes = getNonNewLine();
-
-            System.out.print("How many labs do u want to add?\t");
-            Lab labs[] = new Lab[s.nextInt()];
-
-            for (int i = 0; i < labs.length; i++) {
-                System.out.print("Enter the lab's name: ");
-                String labName = getNonNewLine();
-
-                System.out.println("Enter lab attendants info as prompted.");
+            System.out.println("\n===========================\n" +
+                    "Department No."+(k+1)+
+                    "\nvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv");
+            Department dept;
+            {
+                System.out.println("Enter department name: ");
+                String deptName = getNonNewLine();
+                System.out.println("Enter HOD's info as prompted.");
                 System.out.print("Name: ");
-                String empName = getNonNewLine();
+                String hodName = getNonNewLine();
                 System.out.print("ID: ");
-                String empID = getNonNewLine();
-                System.out.println("Designation: ");
-                String empDesignation = getNonNewLine();
+                String hodID = getNonNewLine();
+                System.out.print("Designation: ");
+                String hodDes = getNonNewLine();
 
-                System.out.print("How many systems do u want to add for Lab no." + (i + 1) + " ?\t");
-                PCSystem systems[] = new PCSystem[s.nextInt()];
+                System.out.println("Enter incharge's info as prompted.");
+                System.out.print("Name: ");
+                String inName = getNonNewLine();
+                System.out.print("ID: ");
+                String inID = getNonNewLine();
+                System.out.print("Designation: ");
+                String inDes = getNonNewLine();
 
-                System.out.println("Enter the required info as prompted.");
-                for (int j = 0; j < systems.length; j++) {
-                    System.out.print("\nSystem ID: ");
-                    String sysID = getNonNewLine();
-                    System.out.print("\nSystem Model: ");
-                    String sysModel = getNonNewLine();
-                    System.out.print("\nLCD Name: ");
-                    String LCDName = getNonNewLine();
-                    System.out.print("\nRAM Size (MB): ");
-                    int RAMSz = s.nextInt();
-                    System.out.print("\nDisk Size (GB): ");
-                    int diskSz = s.nextInt();
-                    System.out.print("\nHas GPU? (y/n) ");
-                    String hasGPU = getNonNewLine();
+                System.out.print("How many labs do u want to add?\t");
+                Lab[] labs = new Lab[s.nextInt()];
 
-                    systems[j] = new PCSystem(sysID, sysModel, LCDName, RAMSz, diskSz, (hasGPU.charAt(0) == 'y') ? true : false);
+                for (int i = 0; i < labs.length; i++) {
+                    System.out.print("Enter the name of lab no."+(i+1)+": ");
+                    String labName = getNonNewLine();
+
+                    System.out.println("Enter lab attendants info as prompted.");
+                    System.out.print("Name: ");
+                    String empName = getNonNewLine();
+                    System.out.print("ID: ");
+                    String empID = getNonNewLine();
+                    System.out.println("Designation: ");
+                    String empDesignation = getNonNewLine();
+
+                    System.out.print("How many systems do u want to add for Lab no." + (i + 1) + " ?\t");
+                    PCSystem[] systems = new PCSystem[s.nextInt()];
+
+                    System.out.println("Enter the required info as prompted.");
+                    for (int j = 0; j < systems.length; j++) {
+                        System.out.println("System No."+(j+1));
+                        System.out.print("\nSystem ID: ");
+                        String sysID = getNonNewLine();
+                        System.out.print("\nSystem Model: ");
+                        String sysModel = getNonNewLine();
+                        System.out.print("\nLCD Name: ");
+                        String LCDName = getNonNewLine();
+                        System.out.print("\nRAM Size (MB): ");
+                        int RAMSz = s.nextInt();
+                        System.out.print("\nDisk Size (GB): ");
+                        int diskSz = s.nextInt();
+                        System.out.print("\nHas GPU? (y/n) ");
+                        String hasGPU = getNonNewLine();
+
+                        systems[j] = new PCSystem(sysID, sysModel, LCDName, RAMSz, diskSz, hasGPU.charAt(0) == 'y');
+                    }
+
+                    labs[i] = new Lab(labName, systems, new Employee(empName, empID, empDesignation));
                 }
+                dept = new Department(deptName, new Employee(hodName, hodID, hodDes), new Employee(inName, inID, inDes),
+                        labs);
 
-                labs[i] = new Lab(labName, systems, new Employee(empName, empID, empDesignation));
+                this.addDept(dept);
             }
-            dept = new Department(deptName, new Employee(hodName, hodID, hodDes), new Employee(inName, inID, inDes),
-                    labs);
-
-            this.addDept(dept);
-        };
+        }
     }
 
     public void addDept(Department d) {

@@ -64,7 +64,10 @@ public class Driver {
                     }
 
                     System.out.println("Which dept. no. do u want to add a lab to?");
+
                     int deptNo = s.nextInt();
+                    deptNo--;
+
                     if(deptNo >= deptList.depts.length)
                     {
                         System.out.println("Could not find that department no.");
@@ -83,9 +86,11 @@ public class Driver {
 
                     System.out.println("Which dept. no. do u want to add a system to?");
                     int deptNo = s.nextInt();
+                    deptNo--;
 
                     System.out.println("Which lab no. do u want to add a system to?");
                     int labNo = s.nextInt();
+                    labNo--;
 
                     if(deptNo < deptList.depts.length)
                         if(labNo >= deptList.depts[deptNo].getLabs().length)
