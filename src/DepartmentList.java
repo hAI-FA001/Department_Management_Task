@@ -1,8 +1,7 @@
 import java.util.Scanner;
 
 public class DepartmentList {
-    Department[] depts;
-
+    public Department[] depts;
     public DepartmentList(Department[] depts) {
         this.depts = new Department[depts.length];
 
@@ -15,6 +14,20 @@ public class DepartmentList {
         this.depts = null;
     }
 
+    public void showMenu(){
+        System.out.print("""
+                    
+                    Enter 1 to add a department.
+                    Enter 2 to display all current departments.
+                    Enter 3 to add a lab to a department.
+                    Enter 4 to remove a lab from a department
+                    Enter 5 to add a system to a lab.
+                    Enter 6 to remove a system from a lab
+                    Enter 7 to display current no. of labs in a department.
+                    Enter 8 to display current no. of systems in a lab in a department.
+                    Enter 9 to quit.
+                    >>> """);
+    }
     public void showAddDeptDialogs(){
         Scanner s = new Scanner(System.in);
         System.out.println("How many dept.s do u want to add?");

@@ -1,7 +1,7 @@
 public class PCSystem {
     private String assetID, modelName, LCDName;
     private int RAMSizeMB, diskSizeGB;
-    public boolean GPUAvailable;
+    private  boolean GPUAvailable;
 
     public PCSystem(String assetID, String modelName, String LCDName, int RAMSizeMB, int diskSizeGB, boolean GPUAvailable){
         this.assetID=assetID;
@@ -22,9 +22,13 @@ public class PCSystem {
 
     @Override
     public String toString(){
-      return String.format("\n......................................\n" +
-                      "%-15s, %-10s, %-10s\nRAM: %5d MB\t\tDisk: %5d GB\nGPU: %s",
-              assetID, modelName, LCDName, RAMSizeMB, diskSizeGB, (GPUAvailable==true)? "Available":"Not Available");
+      return String.format("""
+
+                      ......................................
+                      %-15s, %-10s, %-10s
+                      RAM: %5d MB\t\tDisk: %5d GB
+                      GPU: %s""",
+              assetID, modelName, LCDName, RAMSizeMB, diskSizeGB, (GPUAvailable)? "Available":"Not Available");
     }
 
     @Override
@@ -37,5 +41,53 @@ public class PCSystem {
     @Override
     public Object clone(){
         return new PCSystem(this);
+    }
+
+    public String getAssetID() {
+        return assetID;
+    }
+
+    public void setAssetID(String assetID) {
+        this.assetID = assetID;
+    }
+
+    public String getModelName() {
+        return modelName;
+    }
+
+    public void setModelName(String modelName) {
+        this.modelName = modelName;
+    }
+
+    public String getLCDName() {
+        return LCDName;
+    }
+
+    public void setLCDName(String LCDName) {
+        this.LCDName = LCDName;
+    }
+
+    public int getRAMSizeMB() {
+        return RAMSizeMB;
+    }
+
+    public void setRAMSizeMB(int RAMSizeMB) {
+        this.RAMSizeMB = RAMSizeMB;
+    }
+
+    public int getDiskSizeGB() {
+        return diskSizeGB;
+    }
+
+    public void setDiskSizeGB(int diskSizeGB) {
+        this.diskSizeGB = diskSizeGB;
+    }
+
+    public boolean isGPUAvailable() {
+        return GPUAvailable;
+    }
+
+    public void setGPUAvailable(boolean GPUAvailable) {
+        this.GPUAvailable = GPUAvailable;
     }
 }

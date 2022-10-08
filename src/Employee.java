@@ -1,5 +1,5 @@
 public class Employee {
-    String name, id, designation;
+   public String name, id, designation;
 
     public Employee(String name, String id, String designation) {
         this.name = name;
@@ -27,5 +27,29 @@ public class Employee {
     public boolean equals(Object o){
         Employee tmp = (Employee) o;
         return tmp.id.equals(this.id);
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getDesignation() {
+        return designation;
+    }
+
+    public void setDesignation(String designation) {
+        this.designation = designation;
     }
 }

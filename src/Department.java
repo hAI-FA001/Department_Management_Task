@@ -5,6 +5,9 @@ public class Department {
     private Employee HOD, inCharge;
     private Lab[] labs;
 
+    private boolean hasFreeLabSlot = false;
+    private int numFreeLabSlot = 0;
+
     public Department(String name, Employee HOD, Employee inCharge, Lab[] labs) {
         this.name = name;
         this.HOD = HOD;
@@ -21,6 +24,65 @@ public class Department {
 
         for(int i=0; i<d.labs.length; i++)
             this.labs[i] = (Lab) d.labs[i].clone();
+
+        this.hasFreeLabSlot = d.hasFreeLabSlot;
+        this.numFreeLabSlot = d.numFreeLabSlot;
+    }
+
+    public void removeLab(int labNo){
+
+        if(labs[labNo] == null){
+            System.out.println("That lab has been removed already.");
+            return;
+        }
+
+        for(int i=labNo; i<labs.length; i++){
+            int j = i+1;
+
+            if(labs[i] == null){
+                break;
+            }
+
+            if(j == labs.length){
+                labs[i] = null;
+                hasFreeLabSlot = true;
+                numFreeLabSlot++;
+                break;
+            }
+
+            labs[i] = labs[j];
+        }
+
+        cleanLabsList();
+    }
+
+    public void cleanLabsList(){
+
+        if(!hasFreeLabSlot){
+            System.out.println("Could not find any labs");
+            return;
+        }
+
+        if(this.labs.length-numFreeLabSlot == 0)
+        {
+            this.labs = null;
+            return;
+        }
+
+        Lab[] labs = new Lab[this.labs.length-numFreeLabSlot];
+
+        for(int i=0, j=0; j<this.labs.length; j++){
+            if(this.labs[j] != null)
+            {
+                labs[i] = this.labs[j];
+                i++;
+            }
+        }
+
+        hasFreeLabSlot = false;
+        numFreeLabSlot = 0;
+
+        this.labs = labs;
     }
 
     public void showAddDialogs(){
@@ -59,7 +121,7 @@ public class Department {
                 System.out.print("\nHas GPU? (y/n) ");
                 String hasGPU = DepartmentList.getNonNewLine();
 
-                systems[j] = new PCSystem(sysID, sysModel, LCDName, RAMSz, diskSz, (hasGPU.charAt(0) == 'y') ? true : false);
+                systems[j] = new PCSystem(sysID, sysModel, LCDName, RAMSz, diskSz, hasGPU.charAt(0) == 'y');
             }
 
             labs[i] = new Lab(labName, systems, new Employee(empName, empID, empDesignation));
@@ -70,6 +132,13 @@ public class Department {
     }
     
     public void addLab(Lab l){
+
+        if(this.labs == null)
+        {
+            this.labs = new Lab[]{l};
+            return;
+        }
+
         Lab[] labs = new Lab[this.labs.length+1];
 
         for(int i=0; i<this.labs.length; i++){
@@ -82,16 +151,20 @@ public class Department {
     
     @Override
     public String toString(){
-        String out = String.format("\n=======================\n" +
-                "%-10s\n" +
-                "=======================\n" +
-                "%s\n" +
-                "------------\n" +
-                "%s", name, HOD, inCharge);
+        String out = String.format("""
 
-        for(int i=0; i < labs.length; i++){
-            out += "\n" + labs[i];
-        }
+                =======================
+                %-10s
+                =======================
+                %s
+                ------------
+                %s""", name, HOD, inCharge);
+
+        if(labs != null)
+            for(int i=0; i < labs.length; i++){
+                if(labs[i] != null)
+                    out += "\n" + labs[i];
+            }
 
         return out;
     }
@@ -131,5 +204,21 @@ public class Department {
 
     public void setLabs(Lab[] labs) {
         this.labs = labs;
+    }
+
+    public boolean HasFreeLabSlot() {
+        return hasFreeLabSlot;
+    }
+
+    public void setHasFreeLabSlot(boolean hasFreeLabSlot) {
+        this.hasFreeLabSlot = hasFreeLabSlot;
+    }
+
+    public int getNumFreeLabSlot() {
+        return numFreeLabSlot;
+    }
+
+    public void setNumFreeLabSlot(int numFreeLabSlot) {
+        this.numFreeLabSlot = numFreeLabSlot;
     }
 }

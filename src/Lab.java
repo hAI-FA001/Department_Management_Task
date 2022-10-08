@@ -5,6 +5,9 @@ public class Lab {
     private PCSystem[] computers;
     private Employee attendant;
 
+    private boolean hasFreeSysSlot = false;
+    private int numFreeSysSlot = 0;
+
     public Lab(String name, PCSystem[] computers, Employee attendant) {
         this.name = name;
         this.computers = computers;
@@ -19,8 +22,65 @@ public class Lab {
             this.computers[i] = (PCSystem) l.computers[i].clone();
 
         this.attendant= (Employee) l.attendant.clone();
+
+        this.hasFreeSysSlot = l.hasFreeSysSlot;
+        this.numFreeSysSlot = l.numFreeSysSlot;
     }
-    
+
+    public void removeSys(int sysNo){
+
+        if(computers[sysNo] == null){
+            System.out.println("That system has been removed already.");
+            return;
+        }
+
+        for(int i=sysNo; i<computers.length; i++){
+            int j = i+1;
+
+            if(computers[i] == null){
+                break;
+            }
+
+            if(j == computers.length){
+                computers[i] = null;
+                hasFreeSysSlot = true;
+                numFreeSysSlot++;
+                break;
+            }
+
+            computers[i] = computers[j];
+        }
+
+        cleanSysList();
+    }
+
+    public void cleanSysList(){
+        if(!hasFreeSysSlot){
+            System.out.println("Could not find any free systems.");
+            return;
+        }
+
+        if(this.computers.length-numFreeSysSlot == 0){
+            this.computers = null;
+            return;
+        }
+
+        PCSystem[] sys = new PCSystem[this.computers.length-numFreeSysSlot];
+
+        for(int i=0, j=0; j<this.computers.length; j++){
+            if(this.computers[j] != null)
+            {
+                sys[i] = this.computers[j];
+                i++;
+            }
+        }
+
+        hasFreeSysSlot = false;
+        numFreeSysSlot = 0;
+
+        this.computers = sys;
+    }
+
     public void showAddDialogs(){
         Scanner s = new Scanner(System.in);
         
@@ -42,7 +102,7 @@ public class Lab {
             System.out.print("\nHas GPU? (y/n) ");
             String hasGPU = DepartmentList.getNonNewLine();
 
-            systems[j] = new PCSystem(sysID, sysModel, LCDName, RAMSz, diskSz, (hasGPU.charAt(0) == 'y') ? true : false);
+            systems[j] = new PCSystem(sysID, sysModel, LCDName, RAMSz, diskSz, hasGPU.charAt(0) == 'y');
         }
         
         for(int i=0; i<systems.length; i++)
@@ -50,6 +110,11 @@ public class Lab {
     }
     
     public void addSystem(PCSystem p){
+        if(this.computers == null){
+            this.computers = new PCSystem[]{p};
+            return;
+        }
+
         PCSystem[] computers = new PCSystem[this.computers.length+1];
         
         for(int i=0; i<this.computers.length; i++){
@@ -62,13 +127,18 @@ public class Lab {
 
     @Override
     public String toString(){
-        String out = String.format("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" +
-                "%-15s\n" +
-                "--------------\n" +
-                "%s\n", name, attendant);
+        String out = String.format("""
 
-        for(int i=0; i<this.computers.length; i++)
-            out+= "\n" + this.computers[i];
+                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                %-15s
+                --------------
+                %s
+                """, name, attendant);
+
+        if(this.computers != null)
+            for(int i=0; i<this.computers.length; i++)
+                if(this.computers[i] != null)
+                    out+= "\n" + this.computers[i];
 
         return out;
     }
