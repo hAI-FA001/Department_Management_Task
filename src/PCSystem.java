@@ -3,6 +3,12 @@ public class PCSystem {
     private int RAMSizeMB, diskSizeGB;
     private  boolean GPUAvailable;
 
+    public PCSystem(){
+        assetID = "";
+        modelName = "";
+        LCDName = "";
+    }
+
     public PCSystem(String assetID, String modelName, String LCDName, int RAMSizeMB, int diskSizeGB, boolean GPUAvailable){
         this.assetID=assetID;
         this.modelName=modelName;
@@ -27,7 +33,8 @@ public class PCSystem {
                       ......................................
                       %-15s, %-10s, %-10s
                       RAM: %5d MB\t\tDisk: %5d GB
-                      GPU: %s""",
+                      GPU: %s
+                      """,
               assetID, modelName, LCDName, RAMSizeMB, diskSizeGB, (GPUAvailable)? "Available":"Not Available");
     }
 

@@ -1,7 +1,13 @@
 public class Employee {
    public String name, id, designation;
 
-    public Employee(String name, String id, String designation) {
+   public Employee(){
+       name = "";
+       id = "";
+       designation = "";
+   }
+
+   public Employee(String name, String id, String designation) {
         this.name = name;
         this.id = id;
         this.designation = designation;

@@ -14,8 +14,24 @@ public class DepartmentList {
         this.depts = null;
     }
 
+    public DepartmentList(DepartmentList dL){
+
+        if(dL.depts == null) {
+            this.depts = null;
+            return;
+        }
+
+        this.depts = new Department[dL.depts.length];
+
+        for(int i=0; i < dL.depts.length; i++)
+            this.depts[i] = (Department) dL.depts[i].clone();
+    }
+
     public void showMenu(){
         System.out.print("""
+                    
+                    Enter 10 to save data to a file.
+                    Enter 11 to load data from a file.
                     
                     Enter 1 to add a department.
                     Enter 2 to display all current departments.
@@ -26,11 +42,13 @@ public class DepartmentList {
                     Enter 7 to display current no. of labs in a department.
                     Enter 8 to display current no. of systems in a lab in a department.
                     Enter 9 to quit.
-                    >>> """);
+                    
+                    Enter 'h' to display this menu.
+                    """);
     }
     public void showAddDeptDialogs(){
         Scanner s = new Scanner(System.in);
-        System.out.println("How many dept.s do u want to add?");
+        System.out.println("How many dept.s do u want to add?\t");
         int deptNo = s.nextInt();
         for(int k=0; k < deptNo; k++)
         {
@@ -69,7 +87,7 @@ public class DepartmentList {
                     String empName = getNonNewLine();
                     System.out.print("ID: ");
                     String empID = getNonNewLine();
-                    System.out.println("Designation: ");
+                    System.out.print("Designation: ");
                     String empDesignation = getNonNewLine();
 
                     System.out.print("How many systems do u want to add for Lab no." + (i + 1) + " ?\t");
@@ -105,6 +123,10 @@ public class DepartmentList {
     }
 
     public void addDept(Department d) {
+
+        if(d == null)
+            return;
+
         if(this.depts != null)
         {
             Department[] depts = new Department[this.depts.length + 1];
@@ -136,9 +158,14 @@ public class DepartmentList {
         Scanner s = new Scanner(System.in);
         String nextIn = s.nextLine();
 
-        while(nextIn.charAt(0) =='\n')
+        while(nextIn.length() == 0 || nextIn.charAt(0) =='\n')
             nextIn = s.nextLine();
 
         return nextIn;
+    }
+
+    @Override
+    public Object clone(){
+        return new DepartmentList(this);
     }
 }

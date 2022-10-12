@@ -8,6 +8,13 @@ public class Department {
     private boolean hasFreeLabSlot = false;
     private int numFreeLabSlot = 0;
 
+    public Department(){
+        name = "";
+        HOD = new Employee();
+        inCharge = new Employee();
+        labs = null;
+    }
+
     public Department(String name, Employee HOD, Employee inCharge, Lab[] labs) {
         this.name = name;
         this.HOD = HOD;
@@ -20,10 +27,11 @@ public class Department {
         this.HOD = (Employee) d.HOD.clone();
         this.inCharge = (Employee) d.inCharge.clone();
 
-        this.labs = new Lab[d.labs.length];
+        this.labs = (d.labs != null)? new Lab[d.labs.length] : null;
 
-        for(int i=0; i<d.labs.length; i++)
-            this.labs[i] = (Lab) d.labs[i].clone();
+        if(d.labs != null)
+            for(int i=0; i<d.labs.length; i++)
+                this.labs[i] = (Lab) d.labs[i].clone();
 
         this.hasFreeLabSlot = d.hasFreeLabSlot;
         this.numFreeLabSlot = d.numFreeLabSlot;
@@ -100,7 +108,7 @@ public class Department {
             String empName = DepartmentList.getNonNewLine();
             System.out.print("ID: ");
             String empID = DepartmentList.getNonNewLine();
-            System.out.println("Designation: ");
+            System.out.print("Designation: ");
             String empDesignation = DepartmentList.getNonNewLine();
 
             System.out.print("How many systems do u want to add for Lab no." + (i + 1) + " ?\t");
@@ -133,6 +141,9 @@ public class Department {
     
     public void addLab(Lab l){
 
+        if(l == null)
+            return;
+
         if(this.labs == null)
         {
             this.labs = new Lab[]{l};
@@ -156,6 +167,7 @@ public class Department {
                 =======================
                 %-10s
                 =======================
+                ------------
                 %s
                 ------------
                 %s""", name, HOD, inCharge);
@@ -167,6 +179,13 @@ public class Department {
             }
 
         return out;
+    }
+
+    @Override
+    public boolean equals(Object o){
+        Department d = (Department) o;
+
+        return this.name.equals(d.name);
     }
 
     @Override

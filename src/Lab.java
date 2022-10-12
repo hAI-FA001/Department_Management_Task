@@ -8,6 +8,12 @@ public class Lab {
     private boolean hasFreeSysSlot = false;
     private int numFreeSysSlot = 0;
 
+    public Lab(){
+        name = "";
+        computers = null;
+        attendant = new Employee();
+    }
+
     public Lab(String name, PCSystem[] computers, Employee attendant) {
         this.name = name;
         this.computers = computers;
@@ -16,10 +22,11 @@ public class Lab {
 
     public Lab(Lab l){
         this.name=l.name;
-        this.computers = new PCSystem[l.computers.length];
+        this.computers = (l.computers != null)? new PCSystem[l.computers.length] : null;
 
-        for(int i=0; i<l.computers.length; i++)
-            this.computers[i] = (PCSystem) l.computers[i].clone();
+        if(l.computers != null)
+            for(int i=0; i<l.computers.length; i++)
+                this.computers[i] = (PCSystem) l.computers[i].clone();
 
         this.attendant= (Employee) l.attendant.clone();
 
@@ -110,6 +117,10 @@ public class Lab {
     }
     
     public void addSystem(PCSystem p){
+
+        if(p == null)
+            return;
+
         if(this.computers == null){
             this.computers = new PCSystem[]{p};
             return;
@@ -128,7 +139,6 @@ public class Lab {
     @Override
     public String toString(){
         String out = String.format("""
-
                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 %-15s
                 --------------
@@ -141,6 +151,13 @@ public class Lab {
                     out+= "\n" + this.computers[i];
 
         return out;
+    }
+
+    @Override
+    public boolean equals(Object o){
+        Lab l = (Lab) o;
+
+        return this.name.equals(l.name);
     }
 
     @Override
