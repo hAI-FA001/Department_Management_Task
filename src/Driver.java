@@ -60,7 +60,7 @@ public class Driver {
                         oper = "";
                         break;
                     }
-            if(oper != "")
+            if(!oper.equals(""))
                 exit = processOperation(Integer.parseInt(oper), deptList);
         }
 
