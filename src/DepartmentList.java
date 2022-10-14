@@ -1,3 +1,4 @@
+import java.lang.reflect.Field;
 import java.util.Scanner;
 
 public class DepartmentList {
@@ -29,19 +30,16 @@ public class DepartmentList {
 
     public void showMenu(){
         System.out.print("""
+                                                    [Options]
+                    1 to add a department.                      2 to display all current departments.
+                    3 to add a lab to a department.             4 to remove a lab from a department
+                    5 to add a system to a lab.                 6 to remove a system from a lab
+                    7 to display no. of labs in a department.   8 to display no. of systems in a lab.
+                    9 to change a department's info.            10 to change a lab's info.
+                    11 to change a system's info.
                     
-                    Enter 10 to save data to a file.
-                    Enter 11 to load data from a file.
-                    
-                    Enter 1 to add a department.
-                    Enter 2 to display all current departments.
-                    Enter 3 to add a lab to a department.
-                    Enter 4 to remove a lab from a department
-                    Enter 5 to add a system to a lab.
-                    Enter 6 to remove a system from a lab
-                    Enter 7 to display current no. of labs in a department.
-                    Enter 8 to display current no. of systems in a lab in a department.
-                    Enter 9 to quit.
+                    13 to save data to a file.                  14 to load data from a file.
+                                                    12 to quit.
                     
                     Enter 'h' to display this menu.
                     """);
@@ -163,6 +161,54 @@ public class DepartmentList {
 
         return nextIn;
     }
+
+    public void changeDeptInfo(int deptNo){
+        Field[] fields = depts[deptNo].getClass().getDeclaredFields();
+
+        System.out.println("Enter -1 to keep current values.");
+        for(int i=0; i < fields.length; i++){
+            if(fields[i].toString().contains("name")) {
+                System.out.print("Enter department's name: ");
+                String input = getNonNewLine();
+                if(!input.equals("-1"))
+                    depts[deptNo].setName(input);
+            }
+
+            if(fields[i].toString().contains("Employee")) {
+                Field[] empFields = Employee.class.getDeclaredFields();
+                for (Field field : empFields) {
+                    System.out.print("Enter " + (char)((fields[i].toString().toUpperCase().
+                            substring(fields[i].toString().lastIndexOf('.')+1)
+                            .charAt(0)))
+                            + fields[i].toString().substring(
+                                    fields[i].toString().lastIndexOf('.')+2) + "'s "+
+                            field.toString().substring(field.toString().lastIndexOf('.')+1)
+                            +": ");
+
+                    String input = getNonNewLine();
+                    if(input.equals("-1"))
+                        continue;
+
+                    if(fields[i].toString().contains("HOD")) {
+                        if (field.toString().toLowerCase().contains("name"))
+                            depts[deptNo].getHOD().setName(input);
+                        else if (field.toString().toLowerCase().contains("id"))
+                            depts[deptNo].getHOD().setId(input);
+                        else if (field.toString().toLowerCase().contains("design"))
+                            depts[deptNo].getHOD().setDesignation(input);
+                    }
+                    else {
+                        if (field.toString().toLowerCase().contains("name"))
+                            depts[deptNo].getInCharge().setName(input);
+                        else if (field.toString().toLowerCase().contains("id"))
+                            depts[deptNo].getInCharge().setId(input);
+                        else if (field.toString().toLowerCase().contains("design"))
+                            depts[deptNo].getInCharge().setDesignation(input);
+                    }
+                }
+            }
+            }
+        }
 
     @Override
     public Object clone(){

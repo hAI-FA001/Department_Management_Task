@@ -1,5 +1,5 @@
 public class Employee {
-   public String name, id, designation;
+   private String name, id, designation;
 
    public Employee(){
        name = "";

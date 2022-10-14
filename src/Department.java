@@ -1,3 +1,4 @@
+import java.lang.reflect.Field;
 import java.util.Scanner;
 
 public class Department {
@@ -239,5 +240,44 @@ public class Department {
 
     public void setNumFreeLabSlot(int numFreeLabSlot) {
         this.numFreeLabSlot = numFreeLabSlot;
+    }
+
+    public void changeLabInfo(int labNo){
+        Field[] fields = labs[labNo].getClass().getDeclaredFields();
+
+        System.out.println("Enter -1 to keep current values.");
+        for(int i=0; i < fields.length; i++){
+            if(fields[i].toString().contains("name")) {
+                System.out.print("Enter lab's name: ");
+                String input = DepartmentList.getNonNewLine();
+
+                if(!input.equals("-1"))
+                    labs[labNo].setName(input);
+            }
+
+            if(fields[i].toString().contains("Employee")) {
+                Field[] empFields = Employee.class.getDeclaredFields();
+                for (Field field : empFields) {
+                    System.out.print("Enter " +
+                            fields[i].toString().toLowerCase().substring(
+                            fields[i].toString().lastIndexOf('.')+1) + "'s "+
+                            field.toString().substring(field.toString().lastIndexOf('.')+1)
+                            +": ");
+
+                    String input = DepartmentList.getNonNewLine();
+                    if(input.equals("-1"))
+                        continue;
+
+                    if(fields[i].toString().toLowerCase().contains("attendant")) {
+                        if (field.toString().toLowerCase().contains("name"))
+                            labs[labNo].getAttendant().setName(input);
+                        else if (field.toString().toLowerCase().contains("id"))
+                            labs[labNo].getAttendant().setId(input);
+                        else if (field.toString().toLowerCase().contains("design"))
+                            labs[labNo].getAttendant().setDesignation(input);
+                    }
+                }
+            }
+        }
     }
 }

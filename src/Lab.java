@@ -1,3 +1,4 @@
+import java.lang.reflect.Field;
 import java.util.Scanner;
 
 public class Lab {
@@ -187,5 +188,53 @@ public class Lab {
 
     public void setAttendant(Employee attendant) {
         this.attendant = attendant;
+    }
+
+    public void changeSysInfo(int sysNo){
+        Field[] fields = computers[sysNo].getClass().getDeclaredFields();
+
+        System.out.println("Enter -1 to keep current values.");
+        for(int i=0; i < fields.length; i++){
+            if(fields[i].toString().toLowerCase().contains("string")) {
+                System.out.print("Enter system's " +
+                        (fields[i].toString().toLowerCase().contains("asset")? "id" :
+                                fields[i].toString().toLowerCase().contains("model")? "model" : "LCD name")
+                        + ": ");
+
+                String input = DepartmentList.getNonNewLine();
+                if(input.equals("-1"))
+                    continue;
+
+                if(fields[i].toString().toLowerCase().contains("asset"))
+                    getComputers()[sysNo].setAssetID(input);
+                else if(fields[i].toString().toLowerCase().contains("model"))
+                    getComputers()[sysNo].setModelName(input);
+                else
+                    getComputers()[sysNo].setLCDName(input);
+                }
+            else if (fields[i].toString().toLowerCase().contains("int")){
+                    System.out.print("Enter system's " +
+                            (fields[i].toString().toLowerCase().contains("ram")? "RAM size (MB): " : "disk size (GB): ")
+                    + ": ");
+
+                    String input = DepartmentList.getNonNewLine();
+                    if(input.equals("-1"))
+                        continue;
+
+                    if(fields[i].toString().toLowerCase().contains("ram"))
+                        getComputers()[sysNo].setRAMSizeMB(Integer.parseInt(input));
+                    else
+                        getComputers()[sysNo].setDiskSizeGB(Integer.parseInt(input));
+                }
+            else if(fields[i].toString().toLowerCase().contains("bool")){
+                System.out.print("Enter system's GPU availability (y/n): ");
+
+                String input = DepartmentList.getNonNewLine();
+                if(input.equals("-1"))
+                    continue;
+
+                getComputers()[sysNo].setGPUAvailable(input.toLowerCase().charAt(0) =='y');
+            }
+        }
     }
 }

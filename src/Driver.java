@@ -95,7 +95,7 @@ public class Driver {
                 int deptNo = s.nextInt();
                 deptNo--;
 
-                if(deptNo >= deptList.depts.length)
+                if(deptNo >= deptList.depts.length || deptNo < 0)
                 {
                     System.out.println("Could not find that department no.");
                     break;
@@ -116,7 +116,7 @@ public class Driver {
                 int deptNo = s.nextInt();
                 deptNo--;
 
-                if(deptNo >= deptList.depts.length)
+                if(deptNo >= deptList.depts.length || deptNo < 0)
                 {
                     System.out.println("Could not find that department no.");
                     break;
@@ -132,7 +132,7 @@ public class Driver {
                 int labNo = s.nextInt();
                 labNo--;
 
-                if(labNo >= deptList.depts[deptNo].getLabs().length)
+                if(labNo >= deptList.depts[deptNo].getLabs().length || labNo < 0)
                 {
                     System.out.println("Could not find that lab no.");
                     break;
@@ -159,13 +159,13 @@ public class Driver {
                 int labNo = s.nextInt();
                 labNo--;
 
-                if(deptNo < deptList.depts.length)
+                if(deptNo < deptList.depts.length && deptNo >= 0)
                     if(deptList.depts[deptNo].getLabs()==null)
                     {
                         System.out.println("No labs found.");
                         break;
                     }
-                    else if(labNo >= deptList.depts[deptNo].getLabs().length)
+                    else if(labNo >= deptList.depts[deptNo].getLabs().length || labNo < 0)
                     {
                         System.out.println("Could not find that lab no.");
                         break;
@@ -196,12 +196,12 @@ public class Driver {
                 int labNo = s.nextInt();
                 labNo--;
 
-                if(deptNo < deptList.depts.length)
+                if(deptNo < deptList.depts.length && deptNo >= 0)
                     if(deptList.depts[deptNo].getLabs()==null){
                         System.out.println("No labs found.");
                         break;
                     }
-                    else if(labNo >= deptList.depts[deptNo].getLabs().length)
+                    else if(labNo >= deptList.depts[deptNo].getLabs().length || labNo < 0)
                     {
                         System.out.println("Could not find that lab no.");
                         break;
@@ -222,7 +222,7 @@ public class Driver {
                     break;
                 }
 
-                if(sysNo >= deptList.depts[deptNo].getLabs()[labNo].getComputers().length)
+                if(sysNo >= deptList.depts[deptNo].getLabs()[labNo].getComputers().length || sysNo < 0)
                 {
                     System.out.println("Could not find that system no.");
                     break;
@@ -243,8 +243,10 @@ public class Driver {
                 System.out.println("Enter dept. no.");
                 int deptNo = s.nextInt()-1;
 
-                if(deptNo >= deptList.depts.length)
+                if(deptNo >= deptList.depts.length || deptNo < 0) {
                     System.out.println("Could not find that department.");
+                    break;
+                }
 
                 System.out.println("No. of labs in Department no."+(deptNo+1)+": "
                         +((deptList.depts[deptNo].getLabs()!=null)?
@@ -266,7 +268,7 @@ public class Driver {
                 int labNo = s.nextInt()-1;
 
 
-                if(deptNo >= deptList.depts.length){
+                if(deptNo >= deptList.depts.length || deptNo < 0){
                     System.out.println("Could not find that department");
                     break;
                 }
@@ -274,7 +276,7 @@ public class Driver {
                     System.out.println("No labs found.");
                     break;
                 }
-                else if(labNo >= deptList.depts[deptNo].getLabs().length){
+                else if(labNo >= deptList.depts[deptNo].getLabs().length || labNo < 0){
                     System.out.println("Could not find that lab.");
                     break;
                 }
@@ -284,7 +286,120 @@ public class Driver {
                                 deptList.depts[deptNo].getLabs()[labNo].getComputers().length:0));
             }
             break;
+            case 9:
+            {
+                if(deptList.depts == null)
+                {
+                    System.out.println("No departments found");
+                    break;
+                }
+
+                System.out.println("Which dept. no. do u want to change info of?");
+
+                int deptNo = s.nextInt();
+                deptNo--;
+
+                if(deptNo >= deptList.depts.length || deptNo < 0)
+                {
+                    System.out.println("Could not find that department no.");
+                    break;
+                }
+
+                deptList.changeDeptInfo(deptNo);
+            }
+            break;
             case 10:
+            {
+                if(deptList.depts == null)
+                {
+                    System.out.println("No departments found");
+                    break;
+                }
+
+                System.out.println("Which dept. no.'s lab info do u want to change?");
+
+                int deptNo = s.nextInt();
+                deptNo--;
+
+                if(deptNo >= deptList.depts.length || deptNo < 0)
+                {
+                    System.out.println("Could not find that department no.");
+                    break;
+                }
+
+                if(deptList.depts[deptNo].getLabs() == null){
+                    System.out.println("No labs found.");
+                    break;
+                }
+
+                System.out.println("Which lab no. do u want to change info of?");
+
+                int labNo = s.nextInt();
+                labNo--;
+
+                if(labNo >= deptList.depts[deptNo].getLabs().length || labNo < 0)
+                {
+                    System.out.println("Could not find that lab no.");
+                    break;
+                }
+
+                deptList.depts[deptNo].changeLabInfo(labNo);
+            }
+            break;
+            case 11:
+            {
+                if(deptList.depts == null)
+                {
+                    System.out.println("No departments found");
+                    break;
+                }
+
+                System.out.println("Which dept. no.'s system do u want to change info of?");
+
+                int deptNo = s.nextInt();
+                deptNo--;
+
+                if(deptNo >= deptList.depts.length || deptNo < 0)
+                {
+                    System.out.println("Could not find that department no.");
+                    break;
+                }
+
+                if(deptList.depts[deptNo].getLabs() == null){
+                    System.out.println("No labs found.");
+                    break;
+                }
+
+                System.out.println("Which lab no.'s system do u want to change info of?");
+
+                int labNo = s.nextInt();
+                labNo--;
+
+                if(labNo >= deptList.depts[deptNo].getLabs().length || labNo < 0)
+                {
+                    System.out.println("Could not find that lab no.");
+                    break;
+                }
+
+                System.out.println("Which system no.'s info do u want to change?");
+
+                int sysNo = s.nextInt()-1;
+
+                if(deptList.depts[deptNo].getLabs()[labNo].getComputers()==null){
+                    System.out.println("No computer systems found.");
+                    break;
+                }
+
+                if(sysNo >= deptList.depts[deptNo].getLabs()[labNo].getComputers().length || sysNo < 0)
+                {
+                    System.out.println("Could not find that system no.");
+                    break;
+                }
+
+                deptList.depts[deptNo].getLabs()[labNo].changeSysInfo(sysNo);
+            }
+            break;
+            case 13:
             {
                 if(deptList.depts == null || deptList.depts.length == 0) {
                     System.out.println("No data to save. Add a department first.");
@@ -298,7 +413,7 @@ public class Driver {
                 System.out.println("Saved Successfully. (if the file doesn't show up, exit the program)");
             }
             break;
-            case 11:
+            case 14:
             {
                 System.out.print("Enter file name: ");
                 DepartmentList dL = readFromFile(DepartmentList.getNonNewLine());
@@ -312,7 +427,7 @@ public class Driver {
                 }
             }
             break;
-            case 9:
+            case 12:
                 return true;
             default:
                 System.out.println("Incorrect option entered.");
