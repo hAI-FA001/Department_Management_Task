@@ -1,3 +1,6 @@
+import java.lang.reflect.Field;
+
+@SuppressWarnings("unused")
 public class Employee {
    private String name, id, designation;
 
@@ -31,6 +34,9 @@ public class Employee {
 
     @Override
     public boolean equals(Object o){
+       if(o == null || o.getClass() != Employee.class)
+           return false;
+
         Employee tmp = (Employee) o;
         return tmp.id.equals(this.id);
     }
@@ -57,5 +63,25 @@ public class Employee {
 
     public void setDesignation(String designation) {
         this.designation = designation;
+    }
+
+    public String csvFormat(boolean addFieldHeaders){
+       StringBuilder out = new StringBuilder();
+
+       if(addFieldHeaders)
+            {
+                Field[] fields = Employee.class.getDeclaredFields();
+
+                for (Field f : fields)
+                    out.append(f.getName()).append(',');
+                out.append("department").append(",lab").append("\n");
+            }
+
+        out.append(getName().replace(",", " ")).append(",")
+                .append(getId().replace(",", " ")).append(",")
+                .append(getDesignation().replace(",", " "));
+
+
+       return out.toString();
     }
 }

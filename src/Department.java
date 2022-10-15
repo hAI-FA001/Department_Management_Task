@@ -1,6 +1,7 @@
 import java.lang.reflect.Field;
 import java.util.Scanner;
 
+@SuppressWarnings("unused")
 public class Department {
     private String name;
     private Employee HOD, inCharge;
@@ -98,7 +99,7 @@ public class Department {
         Scanner s = new Scanner(System.in);
 
         System.out.print("How many labs do u want to add?\t");
-        Lab labs[] = new Lab[s.nextInt()];
+        Lab[] labs = new Lab[s.nextInt()];
 
         for (int i = 0; i < labs.length; i++) {
             System.out.print("Enter the lab's name: ");
@@ -112,32 +113,12 @@ public class Department {
             System.out.print("Designation: ");
             String empDesignation = DepartmentList.getNonNewLine();
 
-            System.out.print("How many systems do u want to add for Lab no." + (i + 1) + " ?\t");
-            PCSystem systems[] = new PCSystem[s.nextInt()];
+            labs[i] = new Lab(labName, null, new Employee(empName, empID, empDesignation));
 
-            System.out.println("Enter the required info as prompted.");
-            for (int j = 0; j < systems.length; j++) {
-                System.out.print("\nSystem ID: ");
-                String sysID = DepartmentList.getNonNewLine();
-                System.out.print("\nSystem Model: ");
-                String sysModel = DepartmentList.getNonNewLine();
-                System.out.print("\nLCD Name: ");
-                String LCDName = DepartmentList.getNonNewLine();
-                System.out.print("\nRAM Size (MB): ");
-                int RAMSz = s.nextInt();
-                System.out.print("\nDisk Size (GB): ");
-                int diskSz = s.nextInt();
-                System.out.print("\nHas GPU? (y/n) ");
-                String hasGPU = DepartmentList.getNonNewLine();
-
-                systems[j] = new PCSystem(sysID, sysModel, LCDName, RAMSz, diskSz, hasGPU.charAt(0) == 'y');
-            }
-
-            labs[i] = new Lab(labName, systems, new Employee(empName, empID, empDesignation));
+            labs[i].showAddDialogs(true, true);
         }
-        
-        for(int i=0; i < labs.length; i++)
-            this.addLab(labs[i]);
+
+        for (Lab lab : labs) this.addLab(lab);
     }
     
     public void addLab(Lab l){
@@ -163,27 +144,36 @@ public class Department {
     
     @Override
     public String toString(){
-        String out = String.format("""
+        StringBuilder out = new StringBuilder(String.format("""
 
                 =======================
                 %-10s
                 =======================
+                
+                HOD Info
                 ------------
                 %s
+                
+                Incharge Info
                 ------------
-                %s""", name, HOD, inCharge);
+                %s""", name, HOD, inCharge));
 
-        if(labs != null)
-            for(int i=0; i < labs.length; i++){
-                if(labs[i] != null)
-                    out += "\n" + labs[i];
-            }
+        if(labs != null) {
+            out.append("\n\nLabs Info");
 
-        return out;
+            for (Lab lab : labs)
+                if (lab != null)
+                    out.append("\n").append(lab);
+        }
+
+        return out.toString();
     }
 
     @Override
     public boolean equals(Object o){
+        if(o == null || o.getClass() != Department.class)
+            return false;
+
         Department d = (Department) o;
 
         return this.name.equals(d.name);
@@ -279,5 +269,33 @@ public class Department {
                 }
             }
         }
+    }
+
+    public int searchLab(Lab lab){
+        if(this.labs == null)
+            return -1;
+
+        for(int i=0; i < labs.length; i++)
+            if(labs[i] != null)
+                if(labs[i].equals(lab))
+                    return i;
+
+        return -1;
+    }
+
+    public String csvFormat(boolean addFieldHeaders){
+        StringBuilder out = new StringBuilder();
+
+        if(addFieldHeaders)
+        {
+            out.append("name,hod,incharge\n");
+        }
+
+        out.append(getName().replace(",", " ")).append(",")
+                .append(getHOD().getName().replace(",", " ")).append(",").
+                append(getInCharge().getName().replace(",", " ")).append("\n");
+
+
+        return out.toString();
     }
 }

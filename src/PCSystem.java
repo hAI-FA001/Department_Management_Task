@@ -1,3 +1,6 @@
+import java.lang.reflect.Field;
+
+@SuppressWarnings("unused")
 public class PCSystem {
     private String assetID, modelName, LCDName;
     private int RAMSizeMB, diskSizeGB;
@@ -29,7 +32,7 @@ public class PCSystem {
     @Override
     public String toString(){
       return String.format("""
-
+                      
                       ......................................
                       %-15s, %-10s, %-10s
                       RAM: %5d MB\t\tDisk: %5d GB
@@ -40,6 +43,9 @@ public class PCSystem {
 
     @Override
     public boolean equals(Object o){
+        if(o == null || o.getClass() != PCSystem.class)
+            return false;
+
         PCSystem tmp = (PCSystem) o;
 
         return this.assetID.equals(tmp.assetID);
@@ -97,4 +103,27 @@ public class PCSystem {
     public void setGPUAvailable(boolean GPUAvailable) {
         this.GPUAvailable = GPUAvailable;
     }
+
+    public String csvFormat(boolean addFieldHeaders){
+        StringBuilder out = new StringBuilder();
+
+        if(addFieldHeaders)
+        {
+            Field[] fields = PCSystem.class.getDeclaredFields();
+
+            for (Field f : fields)
+                out.append(f.getName()).append(',');
+            out.append("in lab").append("\n");
+        }
+
+        out.append(getAssetID().replace(",", " ")).append(",")
+                .append(getModelName().replace(",", " ")).append(",")
+                .append(getLCDName().replace(",", " ")).append(",")
+                .append(getRAMSizeMB()).append(",").append(getDiskSizeGB()).append(",").
+                append((isGPUAvailable())? "Available" : "Not Available");
+
+
+        return out.toString();
+    }
+
 }

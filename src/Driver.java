@@ -1,34 +1,9 @@
 import java.io.*;
 import java.util.Scanner;
 
+@SuppressWarnings("unused")
 public class Driver {
     public static void main(String[] args) throws IOException {
-
-       /* {
-            PCSystem[] systems = new PCSystem[10];
-
-            for (int i = 0; i < systems.length; i++)
-                systems[i] = new PCSystem("Dell No." + i, "Model " + i,
-                        "LCD " + i, (i + 1) * 1024, (i + 1) * 2048, (i % 2 == 0) ? true : false);
-
-            Lab[] labs = new Lab[10];
-
-            for (int i = 0; i < labs.length; i++) {
-                labs[i] = new Lab("C-" + (i + 10), systems,
-                        new Employee("Lab Att. Name", "Lab Att. ID", "Lab Att. Design"));
-            }
-
-            Department dept = new Department("Computer Science",
-                    new Employee("Firstname Lastname", "hereIsID", "designation here"),
-                    new Employee("Second employee's name", "hereIsID2", "second's designation"),
-                    labs);
-
-            //System.out.println(dept);
-
-            Department dept2 = new Department(dept);
-
-            System.out.println(dept2);
-        }*/
 
         Scanner s = new Scanner(System.in);
 
@@ -45,23 +20,23 @@ public class Driver {
             }
             System.out.print(">>> ");
 
-            String oper = s.next();
+            String opToPerform = s.next();
 
-            if(oper.charAt(0) == 'h')
+            if(opToPerform.charAt(0) == 'h')
             {
                 showMenu = true;
                 continue;
             }
 
-            for(char c: oper.toCharArray())
-                    if((c < '0' || c > '9') && !(oper.indexOf(c) == 0 && c == 'h'))
+            for(char c: opToPerform.toCharArray())
+                    if((c < '0' || c > '9') && !(opToPerform.indexOf(c) == 0 && c == 'h'))
                     {
                         System.out.println("Only numeric inputs are accepted aside from 'h'");
-                        oper = "";
+                        opToPerform = "";
                         break;
                     }
-            if(!oper.equals(""))
-                exit = processOperation(Integer.parseInt(oper), deptList);
+            if(!opToPerform.equals(""))
+                exit = processOperation(Integer.parseInt(opToPerform), deptList);
         }
 
         System.out.println("Exited...");
@@ -84,336 +59,138 @@ public class Driver {
             break;
             case 3:
             {
-                if(deptList.depts == null)
-                {
-                    System.out.println("No departments found");
-                    break;
-                }
+                int[] indexes = deptList.getIndexOf(true, false, false, false);
 
-                System.out.println("Which dept. no. do u want to add a lab to?");
-
-                int deptNo = s.nextInt();
-                deptNo--;
-
-                if(deptNo >= deptList.depts.length || deptNo < 0)
-                {
-                    System.out.println("Could not find that department no.");
-                    break;
-                }
-                deptList.depts[deptNo].showAddDialogs();
+                if(indexes.length == 1 && indexes[0] != -1)
+                    deptList.depts[indexes[0]].showAddDialogs();
             }
             break;
             case 4:
             {
-                if(deptList.depts == null)
-                {
-                    System.out.println("No departments found");
-                    break;
-                }
+                int[] indexes = deptList.getIndexOf(true, true, false, false);
 
-                System.out.println("Which dept. no. do u want to remove a lab from?");
-
-                int deptNo = s.nextInt();
-                deptNo--;
-
-                if(deptNo >= deptList.depts.length || deptNo < 0)
-                {
-                    System.out.println("Could not find that department no.");
-                    break;
-                }
-
-                if(deptList.depts[deptNo].getLabs() == null){
-                    System.out.println("No labs found.");
-                    break;
-                }
-
-                System.out.println("Which lab no. do u want to remove?");
-
-                int labNo = s.nextInt();
-                labNo--;
-
-                if(labNo >= deptList.depts[deptNo].getLabs().length || labNo < 0)
-                {
-                    System.out.println("Could not find that lab no.");
-                    break;
-                }
-
-                deptList.depts[deptNo].removeLab(labNo);
-                System.out.println("Removed lab no."+(labNo+1)+
-                        " The lab no. of labs after "+(labNo+1)+" (if any) have been shifted down by 1.");
+                if(indexes.length == 2 && indexes[0] != -1 && indexes[1] != -1)
+                    {
+                        System.out.println("Removing lab " +
+                                deptList.depts[indexes[0]].getLabs()[indexes[1]].getName() + ".");
+                        deptList.depts[indexes[0]].removeLab(indexes[1]);
+                    }
             }
             break;
             case 5:
             {
-                if(deptList.depts == null)
-                {
-                    System.out.println("No departments found.");
-                    break;
-                }
+                int[] indexes = deptList.getIndexOf(true, true, false, false);
 
-                System.out.println("Which dept. no. do u want to add a system to?");
-                int deptNo = s.nextInt();
-                deptNo--;
-
-                System.out.println("Which lab no. do u want to add a system to?");
-                int labNo = s.nextInt();
-                labNo--;
-
-                if(deptNo < deptList.depts.length && deptNo >= 0)
-                    if(deptList.depts[deptNo].getLabs()==null)
-                    {
-                        System.out.println("No labs found.");
-                        break;
-                    }
-                    else if(labNo >= deptList.depts[deptNo].getLabs().length || labNo < 0)
-                    {
-                        System.out.println("Could not find that lab no.");
-                        break;
-                    }
-                    else;
-                else
-                {
-                    System.out.println("Could not find that dept. no.");
-                    break;
-                }
-
-                deptList.depts[deptNo].getLabs()[labNo].showAddDialogs();
+                if(indexes.length == 2 && indexes[0] != -1 && indexes[1] != -1)
+                    deptList.depts[indexes[0]].getLabs()[indexes[1]].showAddDialogs(true, false);
             }
             break;
             case 6:
             {
-                if(deptList.depts == null)
-                {
-                    System.out.println("No departments found.");
-                    break;
-                }
+                int[] indexes = deptList.getIndexOf(true, true, true, false);
 
-                System.out.println("Which dept. no. do u want to remove a system from?");
-                int deptNo = s.nextInt();
-                deptNo--;
-
-                System.out.println("Which lab no. do u want to remove a system from?");
-                int labNo = s.nextInt();
-                labNo--;
-
-                if(deptNo < deptList.depts.length && deptNo >= 0)
-                    if(deptList.depts[deptNo].getLabs()==null){
-                        System.out.println("No labs found.");
-                        break;
-                    }
-                    else if(labNo >= deptList.depts[deptNo].getLabs().length || labNo < 0)
+                if(indexes.length == 3 && indexes[0] != -1 && indexes[1] != -1 && indexes[2] != -1)
                     {
-                        System.out.println("Could not find that lab no.");
-                        break;
+                        System.out.println("Removing system " +
+                                deptList.depts[indexes[0]].getLabs()[indexes[1]].getComputers()[indexes[2]].getAssetID() + ".");
+                        deptList.depts[indexes[0]].getLabs()[indexes[1]].removeSys(indexes[2]);
                     }
-                    else;
-                else
-                {
-                    System.out.println("Could not find that dept. no.");
-                    break;
-                }
-
-                System.out.println("Which system no. do u want to remove?");
-
-                int sysNo = s.nextInt()-1;
-
-                if(deptList.depts[deptNo].getLabs()[labNo].getComputers()==null){
-                    System.out.println("No computer systems found.");
-                    break;
-                }
-
-                if(sysNo >= deptList.depts[deptNo].getLabs()[labNo].getComputers().length || sysNo < 0)
-                {
-                    System.out.println("Could not find that system no.");
-                    break;
-                }
-
-                deptList.depts[deptNo].getLabs()[labNo].removeSys(sysNo);
-                System.out.println("Removed system no."+(sysNo+1)+
-                        " The system no. of systems after "+(sysNo+1)+" (if any) have been shifted down by 1.");
             }
             break;
             case 7:
             {
-                if(deptList.depts == null){
-                    System.out.println("No departments found.");
-                    break;
+                int[] indexes = deptList.getIndexOf(true, true, false, false);
+
+                if(indexes.length == 2 && indexes[0] != -1 && indexes[1] != -1){
+                    deptList.depts[indexes[0]].getLabs()[indexes[1]].showAddDialogs(false, true);
                 }
 
-                System.out.println("Enter dept. no.");
-                int deptNo = s.nextInt()-1;
-
-                if(deptNo >= deptList.depts.length || deptNo < 0) {
-                    System.out.println("Could not find that department.");
-                    break;
-                }
-
-                System.out.println("No. of labs in Department no."+(deptNo+1)+": "
-                        +((deptList.depts[deptNo].getLabs()!=null)?
-                        deptList.depts[deptNo].getLabs().length:0));
             }
             break;
             case 8:
             {
-                if(deptList.depts == null)
-                {
-                    System.out.println("No departments found");
-                    break;
+                int[] indexes = deptList.getIndexOf(true, true, false, true);
+
+                if(indexes.length == 3 && indexes[0] != -1 && indexes[1] != -1 && indexes[2] != -1) {
+                    System.out.println("Removing software " +
+                            deptList.depts[indexes[0]].getLabs()[indexes[1]].getSoftwares()[indexes[2]].getName() +"."
+                    );
+                    deptList.depts[indexes[0]].getLabs()[indexes[1]].removeSoftware(indexes[2]);
                 }
-
-                System.out.println("Enter dept. no.");
-                int deptNo = s.nextInt()-1;
-
-                System.out.println("Enter lab no.");
-                int labNo = s.nextInt()-1;
-
-
-                if(deptNo >= deptList.depts.length || deptNo < 0){
-                    System.out.println("Could not find that department");
-                    break;
-                }
-                else if(deptList.depts[deptNo].getLabs() == null){
-                    System.out.println("No labs found.");
-                    break;
-                }
-                else if(labNo >= deptList.depts[deptNo].getLabs().length || labNo < 0){
-                    System.out.println("Could not find that lab.");
-                    break;
-                }
-
-                System.out.println("No. of systems in lab no."+(labNo+1)+": "+
-                        ((deptList.depts[deptNo].getLabs()[labNo].getComputers() != null)?
-                                deptList.depts[deptNo].getLabs()[labNo].getComputers().length:0));
             }
             break;
             case 9:
             {
-                if(deptList.depts == null)
-                {
-                    System.out.println("No departments found");
-                    break;
-                }
+                int[] indexes = deptList.getIndexOf(true, false, false, false);
 
-                System.out.println("Which dept. no. do u want to change info of?");
-
-                int deptNo = s.nextInt();
-                deptNo--;
-
-                if(deptNo >= deptList.depts.length || deptNo < 0)
-                {
-                    System.out.println("Could not find that department no.");
-                    break;
-                }
-
-                deptList.changeDeptInfo(deptNo);
+                if(indexes.length == 1 && indexes[0] != -1)
+                    System.out.println("No. of labs in "+deptList.depts[indexes[0]].getName()+" department: "
+                            +((deptList.depts[indexes[0]].getLabs()!=null)?
+                            deptList.depts[indexes[0]].getLabs().length:0 + " (no labs)"));
             }
             break;
             case 10:
             {
-                if(deptList.depts == null)
-                {
-                    System.out.println("No departments found");
-                    break;
-                }
+                int[] indexes = deptList.getIndexOf(true, true, false, false);
 
-                System.out.println("Which dept. no.'s lab info do u want to change?");
-
-                int deptNo = s.nextInt();
-                deptNo--;
-
-                if(deptNo >= deptList.depts.length || deptNo < 0)
-                {
-                    System.out.println("Could not find that department no.");
-                    break;
-                }
-
-                if(deptList.depts[deptNo].getLabs() == null){
-                    System.out.println("No labs found.");
-                    break;
-                }
-
-                System.out.println("Which lab no. do u want to change info of?");
-
-                int labNo = s.nextInt();
-                labNo--;
-
-                if(labNo >= deptList.depts[deptNo].getLabs().length || labNo < 0)
-                {
-                    System.out.println("Could not find that lab no.");
-                    break;
-                }
-
-                deptList.depts[deptNo].changeLabInfo(labNo);
+                if(indexes.length == 2 && indexes[0] != -1 && indexes[1] != -1)
+                    System.out.println("No. of systems in lab "+
+                            deptList.depts[indexes[0]].getLabs()[indexes[1]].getName()+": "+
+                            ((deptList.depts[indexes[0]].getLabs()[indexes[1]].getComputers() != null)?
+                                 deptList.depts[indexes[0]].getLabs()[indexes[1]].getComputers().length:0 + " (no systems)"));
             }
             break;
             case 11:
             {
-                if(deptList.depts == null)
-                {
-                    System.out.println("No departments found");
-                    break;
-                }
+                int[] indexes = deptList.getIndexOf(true, false, false, false);
 
-                System.out.println("Which dept. no.'s system do u want to change info of?");
+                if(indexes.length == 1 && indexes[0] != -1)
+                    deptList.changeDeptInfo(indexes[0]);
+            }
+            break;
+            case 12:
+            {
+                int[] indexes = deptList.getIndexOf(true, true, false, false);
 
-                int deptNo = s.nextInt();
-                deptNo--;
-
-                if(deptNo >= deptList.depts.length || deptNo < 0)
-                {
-                    System.out.println("Could not find that department no.");
-                    break;
-                }
-
-                if(deptList.depts[deptNo].getLabs() == null){
-                    System.out.println("No labs found.");
-                    break;
-                }
-
-                System.out.println("Which lab no.'s system do u want to change info of?");
-
-                int labNo = s.nextInt();
-                labNo--;
-
-                if(labNo >= deptList.depts[deptNo].getLabs().length || labNo < 0)
-                {
-                    System.out.println("Could not find that lab no.");
-                    break;
-                }
-
-                System.out.println("Which system no.'s info do u want to change?");
-
-                int sysNo = s.nextInt()-1;
-
-                if(deptList.depts[deptNo].getLabs()[labNo].getComputers()==null){
-                    System.out.println("No computer systems found.");
-                    break;
-                }
-
-                if(sysNo >= deptList.depts[deptNo].getLabs()[labNo].getComputers().length || sysNo < 0)
-                {
-                    System.out.println("Could not find that system no.");
-                    break;
-                }
-
-                deptList.depts[deptNo].getLabs()[labNo].changeSysInfo(sysNo);
+                if(indexes.length == 2 && indexes[0] != -1 && indexes[1] != -1)
+                    deptList.depts[indexes[0]].changeLabInfo(indexes[1]);
             }
             break;
             case 13:
+            {
+                int[] indexes = deptList.getIndexOf(true, true, true, false);
+
+
+
+                if(indexes.length == 3 && indexes[0] != -1 && indexes[1] != -1 && indexes[2] != -1)
+                    deptList.depts[indexes[0]].getLabs()[indexes[1]].changeSysInfo(indexes[2]);
+            }
+            break;
+            case 14:
+            {
+                int[] indexes = deptList.getIndexOf(true, true, false, true);
+
+                if(indexes.length == 3 && indexes[0] != -1 && indexes[1] != -1 && indexes[2] != -1)
+                    deptList.depts[indexes[0]].getLabs()[indexes[1]].changeSoftwareInfo(indexes[2]);
+            }
+            break;
+            case 16:
             {
                 if(deptList.depts == null || deptList.depts.length == 0) {
                     System.out.println("No data to save. Add a department first.");
                     break;
                 }
                 else {
-                    System.out.print("Enter the file name: ");
-                    saveFileHandler(DepartmentList.getNonNewLine(), deptList);
+                    System.out.print("Save it as csv or txt? (csv/txt)\t");
+                    boolean asCSV = DepartmentList.getNonNewLine().substring(0, 3).contains("csv");
+                    saveFileHandler(deptList, asCSV);
+
                 }
 
                 System.out.println("Saved Successfully. (if the file doesn't show up, exit the program)");
             }
             break;
-            case 14:
+            case 17:
             {
                 System.out.print("Enter file name: ");
                 DepartmentList dL = readFromFile(DepartmentList.getNonNewLine());
@@ -427,7 +204,7 @@ public class Driver {
                 }
             }
             break;
-            case 12:
+            case 15:
                 return true;
             default:
                 System.out.println("Incorrect option entered.");
@@ -436,7 +213,15 @@ public class Driver {
         return false;
     }
 
-    public static void saveFileHandler(String fileName, DepartmentList deptList) throws IOException {
+    public static void saveFileHandler(DepartmentList deptList, boolean doSaveAsCSV) throws IOException {
+        if(doSaveAsCSV){
+            saveAsCSV(deptList);
+            return;
+        }
+
+        System.out.print("Enter the file name: ");
+        String fileName = DepartmentList.getNonNewLine();
+
         File file = new File(fileName+".txt");
 
         if(file.exists())
@@ -472,14 +257,112 @@ public class Driver {
         else saveToFile(fileName, deptList, false);
     }
 
+    public static void saveAsCSV(DepartmentList deptList) throws IOException {
+        File folder = new File("csv_output\\");
+        if(!folder.exists())
+            if(!folder.mkdir()) {
+                System.out.println("Failed to create output directory...");
+                return;
+            }
+
+        String[] fileNames = {
+                PCSystem.class.getSimpleName(), Employee.class.getSimpleName(), Software.class.getSimpleName(),
+                "Required"+Software.class.getSimpleName(), Lab.class.getSimpleName(), Department.class.getSimpleName()
+        };
+
+        StringBuilder deptsString = new StringBuilder(), labsString = new StringBuilder(),
+                softwaresString = new StringBuilder(), reqSoftwaresString = new StringBuilder(),
+                systemsString = new StringBuilder(), employeesString = new StringBuilder();
+        for(int i=0; i < deptList.depts.length; i++) {
+
+            deptsString.append(deptList.depts[i].csvFormat(deptsString.isEmpty()));
+
+
+            employeesString.append(deptList.depts[i]
+                    .getHOD().csvFormat(employeesString.isEmpty())).append(",")
+                        .append(deptList.depts[i].getName()).append(",-").append("\n")
+                        .append(deptList.depts[i].getInCharge().csvFormat(employeesString.isEmpty()))
+                            .append(",").append(deptList.depts[i].getName())
+                            .append(",-").append("\n");
+
+
+
+            if(deptList.depts[i].getLabs() != null)
+                for(int j=0; j < deptList.depts[i].getLabs().length; j++) {
+
+                    labsString.append(deptList.depts[i].getLabs()[j].csvFormat(labsString.isEmpty()))
+                            .append(",").append(deptList.depts[i].getName())
+                            .append("\n");
+
+
+                    employeesString.append(deptList.depts[i].getLabs()[j].
+                            getAttendant().csvFormat(employeesString.isEmpty()))
+                                .append(",").append(deptList.depts[i].getName()).append(",")
+                                .append(deptList.depts[i].getLabs()[j].getName()).append("\n");
+
+
+                    if(deptList.depts[i].getLabs()[j].getSoftwares() != null)
+                        for(int k=0; k < deptList.depts[i].getLabs()[j].getSoftwares().length; k++) {
+
+                            softwaresString.append(
+                                    deptList.depts[i].getLabs()[j]
+                                            .getSoftwares()[k].csvFormat(softwaresString.isEmpty(), false))
+                                                .append(",").append(deptList.depts[i].getLabs()[j].getName())
+                                                .append("\n");
+
+                            if(deptList.depts[i].getLabs()[j].getSoftwares()[k].getRequiredSoftware() != null)
+                                for(int l=0; l < deptList.depts[i].getLabs()[j].getSoftwares()[k].getRequiredSoftware().length; l++)
+                                    reqSoftwaresString.append(
+                                            deptList.depts[i].getLabs()[j].getSoftwares()[k]
+                                                    .getRequiredSoftware()[l].csvFormat(reqSoftwaresString.isEmpty(), true))
+                                                        .append(",").append(deptList.depts[i].getLabs()[j].getSoftwares()[k].getName())
+                                                        .append("\n");
+                        }
+
+                    if(deptList.depts[i].getLabs()[j].getComputers() != null)
+                        for(int k=0; k < deptList.depts[i].getLabs()[j].getComputers().length; k++)
+                            systemsString.append(
+                                    deptList.depts[i].getLabs()[j]
+                                            .getComputers()[k].csvFormat(systemsString.isEmpty()))
+                                                .append(",").append(deptList.depts[i].getLabs()[j].getName())
+                                                .append("\n");
+                }
+        }
+
+        for(String fileName : fileNames){
+            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(folder+"\\"+fileName+".csv"));
+
+            if(fileName.toLowerCase().contains("sys"))
+                bufferedWriter.write(String.valueOf(systemsString));
+
+            else if(fileName.toLowerCase().contains("empl"))
+                bufferedWriter.write(String.valueOf(employeesString));
+
+            else if(fileName.toLowerCase().contains("soft") && !fileName.toLowerCase().contains("req"))
+                bufferedWriter.write(String.valueOf(softwaresString));
+
+            else if(fileName.toLowerCase().contains("req"))
+                bufferedWriter.write(String.valueOf(reqSoftwaresString));
+
+            else if(fileName.toLowerCase().contains("lab"))
+                bufferedWriter.write(String.valueOf(labsString));
+
+            else if(fileName.toLowerCase().contains("dep"))
+                bufferedWriter.write(String.valueOf(deptsString));
+
+            bufferedWriter.flush();
+            bufferedWriter.close();
+        }
+    }
+
     public static void saveToFile(String fileName, DepartmentList deptList, boolean doAppend) throws IOException {
 
         BufferedWriter bufferedWriter;
 
         if(!doAppend)
-            bufferedWriter = new BufferedWriter(new FileWriter(new File(fileName + ".txt")));
+            bufferedWriter = new BufferedWriter(new FileWriter(fileName + ".txt"));
         else
-            bufferedWriter = new BufferedWriter(new FileWriter(new File(fileName + ".txt"), true));
+            bufferedWriter = new BufferedWriter(new FileWriter(fileName + ".txt", true));
 
         for(int i=0; i < deptList.depts.length; i++) {
             bufferedWriter.write("\n_-_-_-_-_-_-_-_-_-_-_-_-" +
@@ -503,16 +386,20 @@ public class Driver {
         String[] separators = new String[] {
                 "=======================",
                 "------------",
-                "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+                "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
                 "--------------",
-                "......................................"
+                "......................................",
+                "``````````````````````",
+                "~~~~~~~"
         };
-        boolean readingHOD = true;
+        boolean readingHOD = true, hasReadSoftware = false;
 
         Department dept = null;
         Lab lab = null;
         Employee employee = new Employee();
         PCSystem system = new PCSystem();
+        Software software = new Software(),
+                reqSoftware = new Software();
 
         BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
 
@@ -522,6 +409,12 @@ public class Driver {
         while((fileInput = bufferedReader.readLine()) != null){
             if(fileInput.equals("_-_-_-_-_-_-_-_-_-_-_-_-")) {
                 if (dept != null) {
+                    if(hasReadSoftware && lab != null) {
+                        lab.addSoftware((Software) software.clone());
+                        software = new Software();
+                        hasReadSoftware = false;
+                    }
+                    System.out.println("Here");
                     dept.addLab(lab);
                     deptList.addDept(dept);
                     lab = null;
@@ -533,7 +426,7 @@ public class Driver {
 
 
             if(fileInput.equals(separators[0])){
-                if(dept.getName().equals(""))
+                if(dept != null && dept.getName().equals(""))
                     dept.setName(bufferedReader.readLine().strip());
                 continue;
             }
@@ -545,11 +438,15 @@ public class Driver {
                 employee.setDesignation(nameAndDesign[1].strip());
 
                 if(readingHOD){
-                    dept.setHOD((Employee) employee.clone());
+                    if (dept != null) {
+                        dept.setHOD((Employee) employee.clone());
+                    }
                     readingHOD = false;
                 }
                 else {
-                    dept.setInCharge((Employee) employee.clone());
+                    if (dept != null) {
+                        dept.setInCharge((Employee) employee.clone());
+                    }
                     readingHOD = true;
                 }
 
@@ -559,7 +456,9 @@ public class Driver {
             if(fileInput.equals(separators[2])){
 
                 if(lab != null)
-                    dept.addLab((Lab) lab.clone());
+                    if (dept != null) {
+                        dept.addLab((Lab) lab.clone());
+                    }
 
                 lab = new Lab();
 
@@ -574,7 +473,9 @@ public class Driver {
                 employee.setName(nameAndDesign[0].strip());
                 employee.setDesignation(nameAndDesign[1].strip());
 
-                lab.setAttendant((Employee) employee.clone());
+                if (lab != null) {
+                    lab.setAttendant((Employee) employee.clone());
+                }
 
                 continue;
             }
@@ -590,20 +491,52 @@ public class Driver {
                 system.setRAMSizeMB(Integer.parseInt(ramAndDisk[0].substring(5, ramAndDisk[0].length()-3).strip()));
                 system.setDiskSizeGB(Integer.parseInt(ramAndDisk[1].substring(6, ramAndDisk[1].length()-3).strip()));
 
-                if(bufferedReader.readLine().contains("Not Available"))
-                    system.setGPUAvailable(false);
-                else
-                    system.setGPUAvailable(true);
+                system.setGPUAvailable(!bufferedReader.readLine().contains("Not Available"));
 
-                lab.addSystem((PCSystem) system.clone());
+                if (lab != null)
+                    lab.addSystem((PCSystem) system.clone());
 
                 continue;
+            }
+
+            if(fileInput.equals(separators[6])){
+                String[] reqSoftInfo = bufferedReader.readLine().split("\t\t");
+                reqSoftware.setName(reqSoftInfo[0].split(">")[1].strip());
+                reqSoftware.setVer(reqSoftInfo[1].split(":")[1].strip());
+
+                software.addRequiredSoftware((Software) reqSoftware.clone());
+
+                continue;
+            }
+            else {
+                if(hasReadSoftware && !fileInput.toLowerCase().contains("required softwares info:") && lab != null) {
+                    lab.addSoftware((Software) software.clone());
+                    software = new Software();
+                    hasReadSoftware = false;
+                }
+            }
+
+            if(fileInput.equals(separators[5])){
+                String[] softInfo = bufferedReader.readLine().split("\t\t");
+                software.setName(softInfo[0].strip());
+                software.setVer(softInfo[1].split(":")[1].strip());
+
+                softInfo = bufferedReader.readLine().split("\t\t");
+                software.setType(softInfo[0].split(":")[1].strip());
+                software.setVendor(softInfo[1].split(":")[1].strip());
+
+                software.setInstallationSizeMB(Float.parseFloat(bufferedReader.readLine().split(":")[1].split("MB")[0].strip()));
+
+                hasReadSoftware = true;
+
             }
 
         }
 
 
-        dept.addLab(lab);
+        if (dept != null) {
+            dept.addLab(lab);
+        }
         deptList.addDept(dept);
 
         return deptList;
